@@ -1,0 +1,140 @@
+{
+  "name": "web",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "ade0f607-a573-4fb1-b4ec-7327453d5711",
+      "name": "Cron Trigger (1 PM)",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        144,
+        -32
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "functionCode": "const reviews = items[0].json.reviews || [];\nreturn reviews.map(r => ({ json: {\n  reviewer: r.consumer.displayName,\n  rating: r.stars,\n  reviewText: r.text,\n  date: r.createdAt\n}}));"
+      },
+      "id": "b1c4ac01-f713-470a-9627-ad0761847551",
+      "name": "Parse Reviews",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        560,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://trustpilot-scraper.p.rapidapi.com/trustpilot/categories",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "category",
+              "value": "https://www.trustpilot.com/categories/computer_service"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "trustpilot-scraper.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": "14c70accecmsh90a5c05b3a1c567p1464d1jsnb2b5fdf93bff"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        352,
+        -32
+      ],
+      "id": "ff70d943-9a9d-4b8d-8943-7cb31ccf05f0",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "fromEmail": "khanmrnani543@gmail.com",
+        "toEmail": "tarqulopi77@gmail.com",
+        "subject": "Trustpilot Scraper Completed",
+        "emailFormat": "text",
+        "text": "The scraping process finished successfully. Reviews saved in Google Sheets.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        768,
+        -32
+      ],
+      "id": "8fc2114e-4db2-4100-bffb-44ed52aaefac",
+      "name": "Send email",
+      "webhookId": "2da8a269-cf90-4659-8152-845cab1b3505",
+      "credentials": {
+        "smtp": {
+          "id": "Sig9jU7t9O8Bv8Wp",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Cron Trigger (1 PM)": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Reviews": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Parse Reviews",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "53f19984-9357-4b7a-8eb2-96d01a72a606",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "27733f150172c9a8223085ce7f9e047502f6965cc949d842e148e199b552ddc2"
+  },
+  "id": "sClFUCrGTiM4DDwM",
+  "tags": []
+}
