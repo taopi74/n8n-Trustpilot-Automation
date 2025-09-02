@@ -21,7 +21,7 @@ graph TD
 
 The complete n8n workflow is available in this repository. You can download the JSON file and import it into your own n8n instance to run this automation.
 
-- **[Download Workflow.json](./Workflow.json)**
+
 
 ### 3. Loom Video Demonstration
 
